@@ -11,7 +11,7 @@ export async function translateMessage(text: string): Promise<string> {
       body: JSON.stringify({
         system_instruction: { parts: [{ text: systemPrompt }] },
         contents: [{ parts: [{ text }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
       }),
     }
   );
