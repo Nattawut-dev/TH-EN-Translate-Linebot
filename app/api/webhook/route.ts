@@ -19,6 +19,10 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ status: "ok" });
 }
 
+export async function GET() {
+  return NextResponse.json({ message: "Webhook is alive! Please use POST for LINE." });
+}
+
 async function handleEvent(event: WebhookEvent) {
   try {
     if (event.type !== "message" || event.message.type !== "text") return;
