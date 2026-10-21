@@ -1,41 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateSignature, WebhookEvent } from "@line/bot-sdk";
+import { validateSignature, type WebhookEvent } from "@line/bot-sdk";
 import { replyText } from "@/lib/line";
 import { translateMessage } from "@/lib/translate";
-import { shouldTranslate } from "@/lib/shouldTranslate";
+import { handleWebhookEvents } from "@/lib/webhook";
+import { PROMPT_VERSION } from "@/lib/translatePrompt";
+
+import { readBoundedRequestBody, RequestBodyTooLarge } from "@/lib/requestBody";
+
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  const body = await req.text();
+  let body: string;
+  try { body = await readBoundedRequestBody(req); }
+  catch (error) { return NextResponse.json({ error: "invalid request" }, { status: error instanceof RequestBodyTooLarge ? 413 : 400 }); }
+  const secret = process.env.LINE_CHANNEL_SECRET;
   const signature = req.headers.get("x-line-signature") || "";
-
-  if (!validateSignature(body, process.env.LINE_CHANNEL_SECRET!, signature)) {
+  if (!secret || !validateSignature(body, secret, signature)) {
     return NextResponse.json({ error: "invalid signature" }, { status: 401 });
   }
-
-  const events: WebhookEvent[] = JSON.parse(body).events;
-
-  await Promise.all(events.map(handleEvent));
-
+  let payload: { events: WebhookEvent[]; destination: string };
+  try { payload = JSON.parse(body); } catch { return NextResponse.json({ error: "invalid request" }, { status: 400 }); }
+  if (!payload || typeof payload !== "object" || !Array.isArray(payload.events) || typeof payload.destination !== "string") {
+    return NextResponse.json({ error: "invalid request" }, { status: 400 });
+  }
+  await handleWebhookEvents(payload.events, payload.destination, {
+    translate: translateMessage, reply: replyText,
+    reportFailure: (code) => console.error("translation event failed", { code }),
+  });
   return NextResponse.json({ status: "ok" });
 }
 
 export async function GET() {
-  return NextResponse.json({ message: "Webhook is alive! Please use POST for LINE." });
-}
-
-async function handleEvent(event: WebhookEvent) {
-  try {
-    if (event.type !== "message" || event.message.type !== "text") return;
-
-    const text = event.message.text;
-    const replyToken = event.replyToken;
-
-    if (!shouldTranslate(text)) return;
-
-    const translated = await translateMessage(text);
-    await replyText(replyToken, translated);
-  } catch (err) {
-    // fallback เงียบๆ ไม่ reply error ในแชท
-    console.error("handleEvent error:", err);
-  }
+  return NextResponse.json({ message: "Webhook is alive! Please use POST for LINE.", promptVersion: PROMPT_VERSION, contextMode: "request-batch-only", revision: process.env.VERCEL_GIT_COMMIT_SHA ?? null });
 }

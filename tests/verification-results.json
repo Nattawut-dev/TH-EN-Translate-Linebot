@@ -1,0 +1,137 @@
+{
+  "recordedAt": "2026-10-03T08:09:41.414Z",
+  "sourceHashes": {
+    "lib/translatePrompt.ts": "324c247d683737859f5c53ebb7a2f35f03e1dcd6bee360955c3540a2ab25da6d",
+    "lib/translate.ts": "dec897231b9d9123d43a17c966c54cff33fabe8a7b49a801de9cdb2a3fb0c881",
+    "lib/translationContext.ts": "2c800d70798fbd23a7cc7ee1cea816e9ffc428a30858dec617b337ab3b8c1668",
+    "lib/webhook.ts": "e6b72af35ee8fe305d6f9461b0d6a42cdec8c1056ce0398ca67e4e51ada7a57b",
+    "lib/shouldTranslate.ts": "ef99b4214fbad840fec98f15d7094e558f46c56c0064a93bdb636f8626d6266d",
+    "lib/line.ts": "2917cfbec29d16f047a1da273727d2970a79702b22a7fda766a48b3e7b93b485",
+    "lib/requestBody.ts": "0095f6866d7d7beff816fce3e987c2620d0977cdbe450daff2e65e3b13322d04",
+    "app/api/webhook/route.ts": "073d14e706e9223855edf4be1b0134498e3ca9542ad2030377ecda93c31f54bd",
+    "tests/translation.test.mjs": "6c9a2b5bfbd81d3a969a45427ecc26917e2a83d05f7f32eb8c7395f239e55f20",
+    "tests/translation-cases.mjs": "ac44a31b59edf8fcfa26773483cb0cef35da5f22ec0dcf5b1ede459b7c8149ce",
+    "tests/helpers.mjs": "9b9517fcc68e1b546f9a8ad3a24088a267742b82f124549e89332127d31b944d",
+    "scripts/eval-smoke.mjs": "36ef5e3d2e30d8c6a38e9a3ec512b657e311d220737656e7989db3b0ebd7cf49",
+    "package.json": "288686f1bf8f2eefa03345595da3fd00998839f845f2e08c65acd02ca233cdf0"
+  },
+  "checks": {
+    "mockAndContractTests": {
+      "passed": 37,
+      "failed": 0,
+      "syntheticAcceptanceFixtures": 18,
+      "liveModelQuality": false
+    },
+    "lint": {
+      "exitCode": 0,
+      "warnings": 0
+    },
+    "typecheck": {
+      "exitCode": 0
+    },
+    "productionBuild": {
+      "exitCode": 0,
+      "apiRoutes": [
+        "/api/webhook"
+      ]
+    },
+    "localProductionRouteSmokes": {
+      "passed": 8,
+      "failed": 0,
+      "appliesToFinalRevision": true,
+      "finalRerunPerformed": true,
+      "checks": [
+        {
+          "name": "health reports final prompt and batch scope",
+          "status": 200,
+          "passed": true
+        },
+        {
+          "name": "signed empty batch",
+          "status": 200,
+          "passed": true
+        },
+        {
+          "name": "invalid signature",
+          "status": 401,
+          "passed": true
+        },
+        {
+          "name": "signed null payload",
+          "status": 400,
+          "passed": true
+        },
+        {
+          "name": "signed malformed JSON",
+          "status": 400,
+          "passed": true
+        },
+        {
+          "name": "oversize body",
+          "status": 413,
+          "passed": true
+        },
+        {
+          "name": "removed translation GET",
+          "status": 404,
+          "passed": true
+        },
+        {
+          "name": "removed translation POST",
+          "status": 404,
+          "passed": true
+        }
+      ],
+      "LINERecipientsContacted": false,
+      "externalModelCalls": false
+    },
+    "additionalPublicTranslationRoutePresent": false
+  },
+  "liveGeminiEval": {
+    "attempted": 1,
+    "passed": 0,
+    "httpStatus": 400,
+    "safeReason": "API_KEY_INVALID",
+    "model": "gemini-2.5-flash",
+    "usesLocalCredential": true,
+    "productionCredentialValidityEstablished": false
+  },
+  "deployment": {
+    "performed": false,
+    "gitCommitCreated": false,
+    "gitPushPerformed": false,
+    "projectBindingPresent": false,
+    "verifiedCurrentVercelIdentity": "circuitmfu",
+    "verifiedCurrentVercelContext": "circuitmfus-projects",
+    "matchingTranslationProjectFoundInCurrentVercelContext": false,
+    "existingGitRepository": "https://github.com/Nattawut-dev/TH-EN-Translate-Linebot.git",
+    "existingProductionURLFromGitHubAbout": "https://th-en-translate-linebot.vercel.app",
+    "productionHealthBeforeChange": {
+      "httpStatus": 200,
+      "promptVersionPresent": false
+    },
+    "existingGitDeploymentWorkflowVerified": true,
+    "verifiedGitHubIdentity": "Nattawut-dev",
+    "verifiedGitHubRepositoryPushPermission": true,
+    "previousSuccessfulProduction": {
+      "commit": "7b24075b8183f07a5369a527a0aca6b669994d7a",
+      "githubDeploymentId": 5298403193,
+      "url": "https://th-en-translate-linebot-eu2uxk5nh-nattawut-dev-s-projects.vercel.app/"
+    },
+    "heldReason": "Parent will resolve the established Git-to-production route; no Git push or deployment authorized for this validation step."
+  },
+  "context": {
+    "mode": "request-batch-only",
+    "persistentStorePresent": false,
+    "crossRequestHistoryInAcceptedScope": false,
+    "maxTurns": 12,
+    "maxCharacters": 2000,
+    "ttlMinutes": 30
+  },
+  "safety": {
+    "productionEnvironmentChanged": false,
+    "newInfrastructureCreated": false,
+    "AllStarModified": false,
+    "LINERecipientsContacted": false
+  }
+}
